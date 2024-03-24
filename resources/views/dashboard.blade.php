@@ -12,6 +12,10 @@
                     {{ __("You're logged in!") }}
                 </div>
             </div>
+            <div class="mt-3">
+                <a href="{{route('articles.index')}}" class="bg-white p-2 rounded" >article list</a>
+                <a href="{{route('products.index')}}" class="text-white p-2 rounded bg-green-500" >product list</a>
+            </div>
         </div>
     </div>
 </x-app-layout>

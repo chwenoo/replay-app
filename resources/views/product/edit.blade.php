@@ -17,6 +17,7 @@
         <h1>Update Product</h1>
         <form action="{{route('products.update', $product->id)}}" method="post" class="form">
             @csrf
+            @method('PATCH')
             <div class="mb-2">
                 <input type="text" name="name" class="form-control" value="{{$product->name}}">
             </div>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Symfony\Component\VarDumper\Caster\RedisCaster;
 
 class ProductController extends Controller
 {
@@ -51,7 +50,7 @@ class ProductController extends Controller
         return redirect()->route('products.index');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $product = Product::find($id);
         $product->delete();
