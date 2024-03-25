@@ -3,66 +3,54 @@
 namespace App\Http\Controllers\Article;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Article\ArticleRequset;
+use App\Http\Requests\Article\UpdateRequest;
 use App\Models\Article;
-use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
+use App\Models\ArticleImage;
 
 class ArticleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $articles = Article::all();
         return view('article.index', compact('articles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('article.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ArticleRequset $request)
     {
-        $request->validate([
-            "title" => ['required', 'string'],
-            "slug" => [
-                'required', 'string',
-                'unique:articles',
-                // Rule::unique('articles')->ignore($this->route('article'))
-            ],
-            "context" => ['required', 'string'],
-            "excerpt" => ['required', 'string'],
+        // $request->validated();
+
+        $article = Article::create([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'context' => $request->context,
+            'excerpt' => $request->excerpt,
         ]);
 
-        $articles = Article::create([
-            "title" => $request->title,
-            "slug" => $request->slug,
-            "context" => $request->context,
-            "excerpt" => $request->excerpt,
-        ]);
+        $images = $request->file('images');
+        foreach($images as $image) {
+            $imgName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('article_img', $imgName));
+
+            ArticleImage::create([
+                'name' => $imgName,
+                'article_id' =>$article->id,
+            ]);
+        }
 
         return redirect()->route('articles.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(int $id)
     {
         // $article = Article::find($id);
@@ -71,36 +59,15 @@ class ArticleController extends Controller
         return view('article.edit', compact('article'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, int $id)
+    public function update(UpdateRequest $request, int $id)
     {
-        $request->validate([
-            "title" => ['required', 'string'],
-            "slug" => [
-                'required', 'string',
-                // 'unique:articles',
-                Rule::unique('articles')->ignore($id)
-            ],
-            "context" => ['required', 'string'],
-            "excerpt" => ['required', 'string'],
-        ]);
-        // $article = Article::find($id);
         $article = Article::where('id', $id)->first();
 
-        $article->update([
-            "title" => $request->title,
-            "slug" => $request->slug,
-            "context" => $request->context,
-            "excerpt" => $request->excerpt,
-        ]);
+        $article->update($request->validated());
+
         return redirect()->route('articles.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(int $id)
     {
         $article = Article::find($id);
