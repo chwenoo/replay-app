@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Article;
+namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ArticleRequset extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,10 @@ class ArticleRequset extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => ['required', 'string'],
-            "slug" => [
-                'required', 'string',
-                'unique:articles',
-            ],
-            "images" => ['required', 'array'],
-            "context" => ['required', 'string'],
-            "excerpt" => ['required', 'string'],
+            "name" => ['required', 'string'],
+            "description" => ['required', 'string'],
+            "image" => ['required', 'image', 'mimes:jpeg,png'],
+            "price" => ['required', 'integer'],
         ];
     }
 }

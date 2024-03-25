@@ -15,7 +15,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">Create Article</h1>
-        <form action="{{route('articles.store')}}" method="post" class="form">
+        <form action="{{route('articles.store')}}" method="post" class="form" enctype="multipart/form-data">
             @csrf
             <div class="mb-2">
                 <input type="text" name="title" class="form-control" placeholder="title ...">
@@ -28,6 +28,12 @@
                 <input type="text" name="slug" class="form-control" placeholder="slug ...">
                 @if ($errors->first('slug'))
                     <p class="text-danger">{{$errors->first('slug')}}</p>
+                @endif
+            </div>
+            <div class="mb-3">
+                <input type="file" name="images[]" multiple class="form-control">
+                @if ($errors->first('images'))
+                    <p class="text-danger">{{$errors->first('images')}}</p>
                 @endif
             </div>
             <div class="mb-2">

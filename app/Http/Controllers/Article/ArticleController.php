@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Article\ArticleRequset;
 use App\Http\Requests\Article\UpdateRequest;
 use App\Models\Article;
+use App\Models\ArticleImage;
 
 class ArticleController extends Controller
 {
@@ -22,7 +23,25 @@ class ArticleController extends Controller
 
     public function store(ArticleRequset $request)
     {
-        Article::create($request->validated());
+        // $request->validated();
+
+        $article = Article::create([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'context' => $request->context,
+            'excerpt' => $request->excerpt,
+        ]);
+
+        $images = $request->file('images');
+        foreach($images as $image) {
+            $imgName = time().'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('article_img', $imgName));
+
+            ArticleImage::create([
+                'name' => $imgName,
+                'article_id' =>$article->id,
+            ]);
+        }
 
         return redirect()->route('articles.index');
     }
