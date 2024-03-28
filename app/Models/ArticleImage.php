@@ -13,4 +13,9 @@ class ArticleImage extends Model
         'name',
         'article_id',
     ];
+
+    public function image()
+    {
+        return $this->belongsTo(Article::class);
+    }
 }

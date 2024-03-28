@@ -28,6 +28,7 @@ class ArticleRequset extends FormRequest
                 'unique:articles',
             ],
             "images" => ['required', 'array'],
+            "images.*" => ['image', 'mimes:png,jpg,jpeg'],
             "context" => ['required', 'string'],
             "excerpt" => ['required', 'string'],
         ];
