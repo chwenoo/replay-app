@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Http\Requests\Product\ProductRequest;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -46,8 +47,23 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request, $id)
     {
+        $data = $request->validated();
+
+        $image = $request->file('image');
+        // $imgName = time().'.'.$data['image']->getClientOriginalExtension();
+        $imgName = time().'.'.$request->image->getClientOriginalExtension();
+
+        $image->move('uploadedImages/', $imgName);
+
         $product = Product::where('id', $id)->first();
-        $product->update($request->validated());
+
+        $product->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'status' => $request->status,
+            'image' => $imgName,
+            'price' => $request->price,
+        ]);
 
         return redirect()->route('products.index');
     }
