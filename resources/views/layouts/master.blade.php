@@ -23,11 +23,13 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="{{route('home')}}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
+            @can('dashboard')
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{route('home')}}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span></a>
+                </li>
+            @endcan
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -38,26 +40,50 @@
             </div>
 
             <!-- Nav Item - Article -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('articles.index')}}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Article</span>
-                </a>
-            </li>
+            @can('article_list')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('articles.index')}}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Article</span>
+                    </a>
+                </li>
+            @endcan
             <!-- Nav Item - Product -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('products.index')}}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Product</span>
-                </a>
-            </li>
+            @can('product_list')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('products.index')}}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Product</span>
+                    </a>
+                </li>
+            @endcan
             <!-- Nav Item - User -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('users.index')}}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>User</span>
-                </a>
-            </li>
+            @can('user_list')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('users.index')}}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>User</span>
+                    </a>
+                </li>
+            @endcan
+            <!-- Nav Item - Role -->
+            @can('role_list')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('roles.index')}}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Role</span>
+                    </a>
+                </li>
+            @endcan
+            <!-- Nav Item - Permission -->
+            @can('permission_list')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('permissions.index')}}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>Permission</span>
+                    </a>
+                </li>
+            @endcan
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -255,9 +281,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{Auth::user()->name}}</span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="{{asset('img/undraw_profile.svg')}}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -331,7 +357,11 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    {{-- <a class="btn btn-primary" href="login.html">Logout</a> --}}
+                    <form action="{{route('logout')}}" method="POST">
+                        @csrf
+                        <button  class="btn btn-primary">Logout</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -8,17 +8,25 @@ use App\Http\Requests\Article\UpdateRequest;
 use App\Models\Article;
 use App\Models\ArticleImage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('article_list')) {
+            return abort('401');
+        }
+
         $articles = Article::with('articleImages')->get();
         return view('article.index', compact('articles'));
     }
 
     public function create()
     {
+        if (!Gate::allows('article_create')) {
+            return abort('401');
+        }
         return view('article.create');
     }
 
@@ -54,6 +62,9 @@ class ArticleController extends Controller
 
     public function edit(int $id)
     {
+        if (!Gate::allows('article_edit')) {
+            return abort('401');
+        }
         // $article = Article::where('id', $id)->first();
         $article = Article::with('articleImages')->where('id', $id)->first();
 
@@ -107,6 +118,9 @@ class ArticleController extends Controller
 
     public function destroy(int $id)
     {
+        if (!Gate::allows('article_delete')) {
+            return abort('401');
+        }
         Article::find($id)->delete();
         return redirect()->route('articles.index');
     }
