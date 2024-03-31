@@ -18,6 +18,15 @@
             @endif
         </div>
         <div class="mb-2">
+            <select name="role" class="form-select">
+                @foreach ($roles as $role)
+                    <option value="{{$role->name}}" @if ($role->name === $user->roles[0]['name'])
+                        selected
+                    @endif>{{$role->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-2">
             <input type="password" name="password" class="form-control" placeholder="Update password ...">
             @if ($errors->first('password'))
                 <p class="text-danger">{{$errors->first('password')}}</p>

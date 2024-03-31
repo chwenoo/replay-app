@@ -6,17 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Http\Requests\Product\ProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('product_list')) {
+            return abort('401');
+        }
+
         $products = Product::orderBy('name','desc')->get();
         return view('product.index', compact('products'));
     }
 
     public function create()
     {
+        if (!Gate::allows('product_create')) {
+            return abort('401');
+        }
         return view('product.create');
     }
 
@@ -41,6 +49,10 @@ class ProductController extends Controller
 
     public function edit($id)
     {
+        if (!Gate::allows('product_edit')) {
+            return abort('401');
+        }
+
         $product = Product::where('id', $id)->first();
         return view('product.edit', compact('product'));
     }
@@ -70,6 +82,10 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('product_delete')) {
+            return abort('401');
+        }
+
         Product::find($id)->delete();
         return redirect()->route('products.index');
     }
